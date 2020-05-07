@@ -1,11 +1,12 @@
 <template>
   <div class="hello">
     <h1>Agencia Orenday</h1>
-    <ol>
-      <li v-for="auto in autos" :key="auto.nombre" >
-        {{ auto.name }}
-      </li>
-    </ol>
+
+    <div v-for="auto in autos" :key="auto.id" class="auto">
+        <p>{{ auto.name }}</p>
+        <p> {{ auto.manufacturer }} </p>
+        <img :src="auto.picture" >
+    </div>
   </div>
 </template>
 
@@ -33,5 +34,9 @@ export default Vue.extend({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.auto {
+  height: 300px;
+  width: 300px;
+  border: 2px dotted red;
+}
 </style>

@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
+      <img src="@/assets/orendayLogo.jpeg">
       <router-link to="/">Agencia Orenday</router-link> |
       <router-link to="/admin">Admin</router-link>
     </div>

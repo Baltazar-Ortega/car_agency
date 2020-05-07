@@ -1,4 +1,8 @@
-# frontend
+# Orenday Car Agency Web App
+
+<p>The full project consists of a Ruby on Rails API: https://github.com/codingBisons/api-ruby <br>and this Vue.js frontend<p>
+
+<strong>I use the service cloudinary to store the images, using an upload endpoint</strong>
 
 ## Project setup
 ```
@@ -15,10 +19,4 @@ npm run serve
 npm run build
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
