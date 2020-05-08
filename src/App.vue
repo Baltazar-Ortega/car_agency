@@ -1,33 +1,64 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <img src="@/assets/orendayLogo.jpeg">
-      <router-link to="/">Agencia Orenday</router-link> |
-      <router-link to="/admin">Admin</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-app-bar
+      app
+      dark
+      height="80"
+    >
+      <div class="d-flex align-center">
+        <v-img
+          alt="Logo"
+          class="shrink mr-2"
+          src="@/assets/logo.png"
+          width="90"
+        />
+        <v-img
+          alt="Logo"
+          class="shrink mr-2"
+          src="@/assets/logoF.png"
+          width="90"
+        />
+        
+          <router-link to="/" class="mr-2 ml-2"><h1 class="display-1 white--text">Agencia de Autos</h1></router-link>
+        
+      </div>
+
+      <v-spacer></v-spacer>
+
+      <v-btn
+        to="/admin"
+        text
+      >
+        <span class="mr-2">Admin</span>
+        <v-icon>mdi-open-in-new</v-icon>
+      </v-btn>
+    </v-app-bar>
+
+    <v-content>
+      <router-view />
+    </v-content>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script lang="ts">
+import Vue from 'vue';
+// import HelloWorld from './components/HelloWorld.vue';
 
-#nav {
-  padding: 30px;
-}
+export default Vue.extend({
+  name: 'App',
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+  // components: {
+  //   HelloWorld,
+  // },
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+  data: () => ({
+    //
+  }),
+});
+</script>
+
+<style scoped>
+.title {
+  color: white;
 }
 </style>
