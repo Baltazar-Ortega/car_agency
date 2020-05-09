@@ -1,5 +1,5 @@
 {
-  "name": "carAgency",
+  "name": "caragency",
   "version": 2,
   "builds": [
     {
@@ -15,5 +15,5 @@
     { "handle": "filesystem" },
     { "src": ".*", "dest": "/" }
   ],
-  "alias": "carAgency.com"
+  "alias": "caragency.com"
 }

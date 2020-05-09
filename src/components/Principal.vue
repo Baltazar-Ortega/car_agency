@@ -140,7 +140,7 @@
 
           <router-link :to="{ name: 'Detalle', params: {id: auto.id } }"  v-for="auto in autosFiltrados" :key="auto.id" class="mx-auto mb-4" cols="6">
             <v-card >
-              <v-img :src="auto.imagen"  />
+              <img :src="auto.imagen" style="width: 290px; height: 210px;" />
               <v-card-title class="display-1">{{ auto.modelo }}</v-card-title>
               <v-card-subtitle>{{ auto.fabricante }} </v-card-subtitle>
                 <v-card-text>

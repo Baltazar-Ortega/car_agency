@@ -13,7 +13,7 @@
           width="90"
         />
         <!-- <h1 class="display-1 white--text"> -->
-          <router-link to="/" class="mr-2 ml-2"><h1 :class="[$vuetify.breakpoint.mdAndUp ? 'display-1 white--text' : 'headline white--text']">Agencia de autos</h1></router-link>
+          <router-link to="/" class="mr-2 ml-2"><h1 :class="[$vuetify.breakpoint.mdAndUp ? 'display-1 white--text' : 'd-none']">Agencia de autos</h1></router-link>
         
       </div>
 
