@@ -3,25 +3,51 @@
   <v-container>
     <v-row>
         <v-col>
-            <v-img :src="auto.imagen"  />
+            <v-img :src="auto.imagen" style="width: 600px;" />
         </v-col>
-      <v-col >
-         <v-card  class="mx-auto mb-4" cols="6">
-            <v-card-title class="display-1 mb-3">{{ auto.modelo }}</v-card-title>
-            <v-card-subtitle>{{ auto.fabricante }} </v-card-subtitle>
-            <v-card-text>
-                <p>Año: {{ auto.anio }}</p>
-                <p>Kilometraje: {{ auto.kilometraje }} </p>
-                <p class="title mb-0">Precio: <span class="red--text">$ {{ auto.precio }}</span> </p>
-            </v-card-text>
-        </v-card>     
-      </v-col>
+        <v-col >
+          <v-card  class="mx-auto mb-4" cols="6">
+              <v-card-title class="display-1 mb-3">{{ auto.modelo }}</v-card-title>
+              <v-card-subtitle>
+                <v-chip
+                  
+                  color="red"
+                  label
+                  text-color="white"
+                >
+                  <v-icon left>mdi-label</v-icon>
+                  {{ auto.fabricante }} 
+                </v-chip>
+                <v-chip
+                  class="ml-2"
+                  color="blue"
+                  label
+                  text-color="white"
+                >
+                  <v-icon left>mdi-label</v-icon>
+                  {{ usadoPalabra }}
+                </v-chip>
+              </v-card-subtitle>
+              
+              <v-card-text>
+                  <p class="title mb-3">Precio: <span class="red--text">$ {{ auto.precio }}</span> </p>
+                  <p> <strong> Año: </strong> {{ auto.anio }}</p>
+                  <p><strong> Kilometraje: </strong> {{ auto.kilometraje }} </p>
+                  <p><strong> Color: </strong> {{ auto.color }}</p>
+                  <p><strong> Tipo: </strong> {{auto.tipo}}</p>
+                  <p><strong> Transmision: </strong> {{auto.transmision}}</p>
+                  <p><strong> </strong>  </p>
+                  <p><strong> Propietarios: </strong> {{auto.propietarios}}</p>
+              </v-card-text>
+          </v-card>     
+         </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
 /* eslint-disable */
+import axios from 'axios'
 import Vue from 'vue';
 
 export default Vue.extend({
@@ -33,25 +59,27 @@ export default Vue.extend({
   },
   data: function() {
     return {
-        auto: {},
+        auto: {} as any,
         idRecibido: parseInt(this.$route.params.id)
     }
   },
   created: function() {
-      const carros: {id:Number, modelo: String, fabricante: String, anio: Number, precio: Number, kilometraje: Number, imagen: String}[] = [
-        {id: 1, modelo: 'vocho', fabricante: 'Volkswagen', anio: 2002, precio: 250000, kilometraje: 450000, imagen: '/assets/vocho.jpg'},
-        {id: 2, modelo: 'civic', fabricante: 'honda', anio: 2000, precio: 50000, kilometraje: 450000, imagen: '/assets/civic.jpg'},
-        {id: 3, modelo: 'sentra', fabricante: 'Nissan', anio: 2005, precio: 70000, kilometraje: 350000, imagen: '/assets/sentra.jpg'},
-        {id: 4, modelo: 'aveo', fabricante: 'Chevrolet', anio: 2008, precio: 85000, kilometraje: 450000, imagen: '/assets/aveo.jpg'},
-        {id: 5, modelo: 'wrangler', fabricante: 'Jeep', anio: 2010, precio: 120000, kilometraje: 250000, imagen: '/assets/wrangler.jpg'},
-        {id: 6, modelo: 'f40', fabricante: 'Ferrari', anio: 2015, precio: 150000, kilometraje: 150000, imagen: '/assets/f40.jpg'},
-        {id: 7, modelo: 'a4', fabricante: 'Audi', anio: 2017, precio: 220000, kilometraje: 15000, imagen: '/assets/a4.jpg'},
-        {id: 8, modelo: 'huracan', fabricante: 'Lamborghini', anio: 2019, precio: 270500, kilometraje: 1000, imagen: '/assets/huracan.jpg'}
-      ]
+    const autos = axios.get(`https://cryptic-brook-62567.herokuapp.com/automovils/${this.idRecibido}.json`, {
+      headers: { 'Content-Type': 'application/json' }
+    }).then(res => {
+      console.log("res: ", res)
+      this.auto = res.data
+    }).catch(error => console.log("error", error))
       console.log("id recibido: ", this.idRecibido)
-      this.auto = carros.filter(auto => auto.id === this.idRecibido)[0]
   },
-  methods: {
+  computed: {
+    usadoPalabra: function(){
+      if (this.auto.usado == 1) {
+        return 'Usado'
+      } else {
+        return 'Nuevo'
+      }
+    }
   }
 });
 </script>
