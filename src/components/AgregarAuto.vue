@@ -1,25 +1,45 @@
 <template>
-  <div class="formulario">
-    <form id="formAgregar" @submit.prevent="agregar" enctype="multipart/form-data">
-        <label for="name">Nombre: </label>
-        <input type="text" name="name" v-model="name"> <br>
-        <label for="manufacturer">Fabricante: </label>
-        <input type="text" name="manufacturer" v-model="manufacturer"> <br>
+    <v-container>
+        <h1 class="headline mt-2">Agregar Auto</h1>
+        <v-row>
+            <v-col xs="12" md="6">
+                <form id="formAgregar" @submit.prevent="agregar" enctype="multipart/form-data">
 
+                <v-text-field
+                    v-model="name"
+                    label="name"
+                    required
+                ></v-text-field>
 
-        <input type="file" id="fileElem" accept="image/*" @change="handlePicture($event)"> <br>
-        <input type="hidden" name="picture" v-model="pictureUrl">
-        <div id="uploadedImage"></div>
+                 <v-text-field
+                    v-model="manufacturer"
+                    label="manufacturer"
+                    required
+                ></v-text-field>
 
-        <p>
-            {{ pictureUrl }}
-        </p>
-        
-        <input type="submit" value="Enviar" />
-    </form>
+                <v-file-input
+                    label="pictureImg"
+                    filled
+                    prepend-icon="mdi-camera"
+                    @change="handlePicture($event)"
+                ></v-file-input>
 
-    <h2 v-if="agregado">Auto agregado</h2>
-  </div>
+                <input type="hidden" name="picture" v-model="pictureUrl">
+
+                <v-btn color="success">
+                    <input type="submit" value="Enviar" />
+                </v-btn>
+                
+
+                </form>
+
+            </v-col>
+
+            <v-col xs="12" md="3" offset="2">
+                <div id="uploadedImage"></div>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script lang="ts">
@@ -36,16 +56,17 @@ const vm = Vue.extend({
         cloudName: 'balti',
         uploadPreset: 'schnauzer',
         pictureUrl: '',
-        agregado: false
+        agregado: false,
     }
   },
   methods: {
       agregar: function() {
           if (this.validarForm()){
-                const form: HTMLFormElement =  document.getElementById('formAgregar') as HTMLFormElement
-                console.log("Form enviado", form)
-                axios.post('http://localhost:3000/cars', new FormData(form)).then(res => console.log(res)).catch(err => console.log(err))
-                this.agregado = true
+              console.log("Validado en agregar")
+                // const form: HTMLFormElement =  document.getElementById('formAgregar') as HTMLFormElement
+                // console.log("Form enviado", form)
+                // axios.post('http://localhost:3000/cars', new FormData(form)).then(res => console.log(res)).catch(err => console.log(err))
+                // this.agregado = true
           } else {
               return
           }
@@ -53,14 +74,12 @@ const vm = Vue.extend({
       },
       handlePicture: function(evt: any) {
 
-
           const uploadedImage = document.getElementById('uploadedImage');
-          console.log("UploadedImage", uploadedImage)
 
-          console.log(evt.target.files[0])
-          const file = evt.target.files[0]
+          const file = evt
+          
           const urlCloud = `https://api.cloudinary.com/v1_1/${this.cloudName}/image/upload`;
-          console.log("UrlCloud", urlCloud)
+          //console.log("UrlCloud", urlCloud)
           const xhr = new XMLHttpRequest();
           const fd = new FormData();
           xhr.open('POST', urlCloud, true)
@@ -76,14 +95,14 @@ const vm = Vue.extend({
                 this.pictureUrl = url
                 // Create a thumbnail of the uploaded image, with 150px width
                 const tokens = url.split('/');
-                tokens.splice(-2, 0, 'w_150,c_scale');
+                tokens.splice(-2, 0, 'w_350,c_scale');
                 const img = new Image(); // HTML5 Constructor
                 img.src = tokens.join('/');
                 img.alt = response.public_id;
                 (uploadedImage as HTMLElement).appendChild(img);
             } else {
-                console.log("xhr: ", xhr)
-                console.log("xhr status: ", xhr.status)
+                //console.log("xhr: ", xhr)
+                //console.log("xhr status: ", xhr.status)
             }
           };  
           

@@ -1,35 +1,46 @@
 <template>
-  <div class="about">
-    <h1>Administracion</h1>
-    <div v-if="valor">
-        <AgregarAuto />
-    </div>
-    <button v-if="btnAgregar" v-on:click="agregarAuto">Agregar Auto</button>
-  </div>
+  <v-container>
+    <h1 class="display-1 mt-3 mb-5">Administracion</h1>
+
+    <v-row>
+      <router-link to="/consultasStock" >
+        <v-btn class="ma-2 mb-5" outlined color="indigo">Consultas de Stock</v-btn>
+      </router-link>
+    </v-row>
+
+    <v-row>
+      <router-link to="/consultasClientes" >
+        <v-btn class="ma-2 mb-5" outlined color="indigo">Consultas de Clientes</v-btn>
+      </router-link>
+    </v-row>
+
+    <v-row>
+      <router-link to="/agregar" >
+        <v-btn class="ma-2 mb-5" outlined color="success">Agregar Auto</v-btn>
+      </router-link>
+    </v-row>
+
+    <v-row>
+      <router-link to="/buscarAuto"  > 
+        <v-btn class="ma-2 mb-5" outlined color="orange">Buscar auto</v-btn>
+      </router-link>
+    </v-row>
+    
+  </v-container>
 </template>
 
 <script lang="ts">
 
 import Vue from 'vue';
-import AgregarAuto from './AgregarAuto.vue'
 
 export default Vue.extend({
   name: 'Admin',
   data: function() {
     return {
-      valor: false,
-      btnAgregar: true
     }
   },
   methods: {
-      agregarAuto: function() {
-          this.valor = true;
-          this.btnAgregar = false
-      }
   },
-  components: {
-      AgregarAuto
-  }
 });
 </script>
 

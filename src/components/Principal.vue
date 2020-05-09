@@ -137,18 +137,23 @@
 
       <v-col >
         <v-row>
-          <v-card v-for="auto in autosFiltrados" :key="auto.id" class="mx-auto mb-4" cols="6">
-          <v-img :src="auto.imagen"  />
-          <v-card-title class="display-1">{{ auto.modelo }}</v-card-title>
-          <v-card-subtitle>{{ auto.fabricante }} </v-card-subtitle>
-            <v-card-text>
-              <p>Año: {{ auto.anio }}</p>
-              <p>Kilometraje: {{ auto.kilometraje }} </p>
-              <p class="title mb-0">Precio: <span class="red--text">$ {{ auto.precio }}</span> </p>
-            </v-card-text>
-          </v-card>
+
+          <router-link :to="{ name: 'Detalle', params: {id: auto.id } }"  v-for="auto in autosFiltrados" :key="auto.id" class="mx-auto mb-4" cols="6">
+            <v-card >
+              <v-img :src="auto.imagen"  />
+              <v-card-title class="display-1">{{ auto.modelo }}</v-card-title>
+              <v-card-subtitle>{{ auto.fabricante }} </v-card-subtitle>
+                <v-card-text>
+                  <p>Año: {{ auto.anio }}</p>
+                  <p>Kilometraje: {{ auto.kilometraje }} </p>
+                  <p class="title mb-0">Precio: <span class="red--text">$ {{ auto.precio }}</span> </p>
+                </v-card-text>
+              </v-card>
+          </router-link>
+
+          
+
         </v-row>
-        
       </v-col>
     </v-row>
   </v-container>
@@ -185,14 +190,14 @@ export default Vue.extend({
     //   console.log("res", res)
     // }).catch(error => console.log("error", error))
     const carros: any = [
-      {modelo: 'vocho', fabricante: 'Volkswagen', anio: 2002, precio: 250000, kilometraje: 450000, imagen: '/assets/vocho.jpg'},
-        {modelo: 'civic', fabricante: 'honda', anio: 2000, precio: 50000, kilometraje: 450000, imagen: '/assets/civic.jpg'},
-        {modelo: 'sentra', fabricante: 'Nissan', anio: 2005, precio: 70000, kilometraje: 350000, imagen: '/assets/sentra.jpg'},
-        {modelo: 'aveo', fabricante: 'Chevrolet', anio: 2008, precio: 85000, kilometraje: 450000, imagen: '/assets/aveo.jpg'},
-        {modelo: 'wrangler', fabricante: 'Jeep', anio: 2010, precio: 120000, kilometraje: 250000, imagen: '/assets/wrangler.jpg'},
-        {modelo: 'f40', fabricante: 'Ferrari', anio: 2015, precio: 150000, kilometraje: 150000, imagen: '/assets/f40.jpg'},
-        {modelo: 'a4', fabricante: 'Audi', anio: 2017, precio: 220000, kilometraje: 15000, imagen: '/assets/a4.jpg'},
-        {modelo: 'huracan', fabricante: 'Lamborghini', anio: 2019, precio: 270500, kilometraje: 1000, imagen: '/assets/huracan.jpg'}
+        {id: 1, modelo: 'vocho', fabricante: 'Volkswagen', anio: 2002, precio: 250000, kilometraje: 450000, imagen: '/assets/vocho.jpg'},
+        {id: 2, modelo: 'civic', fabricante: 'honda', anio: 2000, precio: 50000, kilometraje: 450000, imagen: '/assets/civic.jpg'},
+        {id: 3, modelo: 'sentra', fabricante: 'Nissan', anio: 2005, precio: 70000, kilometraje: 350000, imagen: '/assets/sentra.jpg'},
+        {id: 4, modelo: 'aveo', fabricante: 'Chevrolet', anio: 2008, precio: 85000, kilometraje: 450000, imagen: '/assets/aveo.jpg'},
+        {id: 5, modelo: 'wrangler', fabricante: 'Jeep', anio: 2010, precio: 120000, kilometraje: 250000, imagen: '/assets/wrangler.jpg'},
+        {id: 6, modelo: 'f40', fabricante: 'Ferrari', anio: 2015, precio: 150000, kilometraje: 150000, imagen: '/assets/f40.jpg'},
+        {id: 7, modelo: 'a4', fabricante: 'Audi', anio: 2017, precio: 220000, kilometraje: 15000, imagen: '/assets/a4.jpg'},
+        {id: 8, modelo: 'huracan', fabricante: 'Lamborghini', anio: 2019, precio: 270500, kilometraje: 1000, imagen: '/assets/huracan.jpg'}
       ]
     this.autos = carros
     this.autosFiltrados = carros
