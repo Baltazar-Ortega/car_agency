@@ -130,6 +130,11 @@
          
         </div>
         
+        <v-select v-model="color" :items="colors" label="Color" name="color" @change="seleccionarColor" class="mt-3"></v-select>
+
+        <v-select v-model="usadoString" :items="usados" label="Usado" name="usado" @change="seleccionarUsado" class="mt-3"></v-select>
+
+        <v-select v-model="transmision" :items="transmisiones" label="Transmision" name="transmision" @change="seleccionarTransmision" class="mt-3"></v-select>
 
       </v-col>
 
@@ -189,20 +194,37 @@ export default Vue.extend({
       rangoAnio: [2000, 2021],
       minKm: 0,
       maxKm: 500000,
-      rangoKm: [0, 500000]
+      rangoKm: [0, 500000],
+      color: '' as String,
+      colors: [
+            'Rojo',
+            'Negro',
+            'Gris',
+            'Blanco',
+            'Otro',
+      ],
+      usadoString: '',
+      usados: ['Usado', 'Nuevo'],
+      usado: 0,
+      transmision: '' as String,
+      transmisiones: [
+            'Estandar',
+            'Automatico'
+      ],
+      // config
+      apiUrl: 'https://cryptic-brook-62567.herokuapp.com'
     }
   },
   created: function() {
-    const autos = axios.get('https://cryptic-brook-62567.herokuapp.com/automovils.json', {
+    const autos = axios.get(`${this.apiUrl}/automovils.json`, {
       headers: { 'Content-Type': 'application/json' }
     }).then(res => {
       this.autos = res.data
       this.autosFiltrados = res.data
-      console.log("res", res.data)
     }).catch(error => console.log("error", error))
   },
   methods: {
-    cambioRangos: function(event: Event){
+    cambioRangos: function(){
       let autosFiltrados = this.autos.filter(
         auto => this.rangoPrecio[0] <= auto.precio && 
         auto.precio <= this.rangoPrecio[1] &&
@@ -212,6 +234,93 @@ export default Vue.extend({
         auto.kilometraje <= this.rangoKm[1])
       this.autosFiltrados = Object.values(autosFiltrados)
     },
+    seleccionarColor: function(color: String) {
+
+      // this.color = color
+      const autos = axios.get(`${this.apiUrl}/color/${color}.json`, {
+          headers: { 'Content-Type': 'application/json' }
+        }).then(res => {
+
+          const autosRes: any[] = res.data 
+          // Deben cumplir con el usado/nuevo
+          let autos;
+
+          if(this.usadoString){
+            autos = autosRes.filter(auto => auto.usado == this.usado)
+            if(this.transmision) {
+              autos = autos.filter(auto => auto.transmision == this.transmision)
+            }
+          } else {
+            autos = autosRes
+          }
+          
+
+          this.autos = autos
+          this.autosFiltrados = autos
+          // console.log("res", res.data)
+          this.cambioRangos()
+        }).catch(error => console.log("error", error))
+    },
+    seleccionarUsado: function(usado: String) {
+      this.usado = this.usadoNumero
+
+      const url = `${this.apiUrl}/usado/${this.usado}.json`
+      const autos = axios.get(url, {
+          headers: { 'Content-Type': 'application/json' }
+        }).then(res => {
+
+          const autosRes: any[] = res.data
+          let autos;
+          if(this.color) {
+            autos = autosRes.filter(auto => auto.color == this.color)
+            if(this.transmision) {
+              autos = autos.filter(auto => auto.transmision == this.transmision)
+            }
+          } else {
+            autos = autosRes
+          }
+          
+          this.autos = autos
+          this.autosFiltrados = autos
+          // console.log("res", res.data)
+          this.cambioRangos()
+        }).catch(error => console.log("error", error))
+      
+    },
+    seleccionarTransmision: function(transmision: String) {
+      const autos = axios.get(`${this.apiUrl}/transmision/${transmision}.json`, {
+          headers: { 'Content-Type': 'application/json' }
+        }).then(res => {
+
+          const autosRes: any[] = res.data 
+          // Deben cumplir con el usado/nuevo
+          let autos;
+
+          if(this.usadoString){
+            autos = autosRes.filter(auto => auto.usado == this.usado)
+            if (this.color) {
+              autos = autos.filter(auto => auto.color == this.color)
+            }
+          } else {
+            autos = autosRes
+          }
+          
+
+          this.autos = autos
+          this.autosFiltrados = autos
+          // console.log("res", res.data)
+          this.cambioRangos()
+        }).catch(error => console.log("error", error))
+    }
+  },
+  computed: {
+    usadoNumero: function() {
+      if (this.usadoString == 'Usado') {
+              return 1
+          } else {
+              return 0
+          }
+    }
   }
 });
 </script>
