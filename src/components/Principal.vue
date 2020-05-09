@@ -183,24 +183,26 @@ export default Vue.extend({
     }
   },
   created: function() {
-    // const autos = axios.get('http://localhost:3000/cars.json', {
-    //   headers: { 'Content-Type': 'application/json' }
-    // }).then(res => {
-    //   this.autos = res.data
-    //   console.log("res", res)
-    // }).catch(error => console.log("error", error))
-    const carros: any = [
-        {id: 1, modelo: 'vocho', fabricante: 'Volkswagen', anio: 2002, precio: 250000, kilometraje: 450000, imagen: '/assets/vocho.jpg'},
-        {id: 2, modelo: 'civic', fabricante: 'honda', anio: 2000, precio: 50000, kilometraje: 450000, imagen: '/assets/civic.jpg'},
-        {id: 3, modelo: 'sentra', fabricante: 'Nissan', anio: 2005, precio: 70000, kilometraje: 350000, imagen: '/assets/sentra.jpg'},
-        {id: 4, modelo: 'aveo', fabricante: 'Chevrolet', anio: 2008, precio: 85000, kilometraje: 450000, imagen: '/assets/aveo.jpg'},
-        {id: 5, modelo: 'wrangler', fabricante: 'Jeep', anio: 2010, precio: 120000, kilometraje: 250000, imagen: '/assets/wrangler.jpg'},
-        {id: 6, modelo: 'f40', fabricante: 'Ferrari', anio: 2015, precio: 150000, kilometraje: 150000, imagen: '/assets/f40.jpg'},
-        {id: 7, modelo: 'a4', fabricante: 'Audi', anio: 2017, precio: 220000, kilometraje: 15000, imagen: '/assets/a4.jpg'},
-        {id: 8, modelo: 'huracan', fabricante: 'Lamborghini', anio: 2019, precio: 270500, kilometraje: 1000, imagen: '/assets/huracan.jpg'}
-      ]
-    this.autos = carros
-    this.autosFiltrados = carros
+    const autos = axios.get('https://cryptic-brook-62567.herokuapp.com/automovils.json', {
+      headers: { 'Content-Type': 'application/json' }
+    }).then(res => {
+      this.autos = res.data
+      this.autosFiltrados = res.data
+      console.log("res", res.data)
+    }).catch(error => console.log("error", error))
+
+    // const carros: any = [
+    //     {id: 1, modelo: 'vocho', fabricante: 'Volkswagen', anio: 2002, precio: 250000, kilometraje: 450000, imagen: '/assets/vocho.jpg'},
+    //     {id: 2, modelo: 'civic', fabricante: 'honda', anio: 2000, precio: 50000, kilometraje: 450000, imagen: '/assets/civic.jpg'},
+    //     {id: 3, modelo: 'sentra', fabricante: 'Nissan', anio: 2005, precio: 70000, kilometraje: 350000, imagen: '/assets/sentra.jpg'},
+    //     {id: 4, modelo: 'aveo', fabricante: 'Chevrolet', anio: 2008, precio: 85000, kilometraje: 450000, imagen: '/assets/aveo.jpg'},
+    //     {id: 5, modelo: 'wrangler', fabricante: 'Jeep', anio: 2010, precio: 120000, kilometraje: 250000, imagen: '/assets/wrangler.jpg'},
+    //     {id: 6, modelo: 'f40', fabricante: 'Ferrari', anio: 2015, precio: 150000, kilometraje: 150000, imagen: '/assets/f40.jpg'},
+    //     {id: 7, modelo: 'a4', fabricante: 'Audi', anio: 2017, precio: 220000, kilometraje: 15000, imagen: '/assets/a4.jpg'},
+    //     {id: 8, modelo: 'huracan', fabricante: 'Lamborghini', anio: 2019, precio: 270500, kilometraje: 1000, imagen: '/assets/huracan.jpg'}
+    //   ]
+    // this.autos = carros
+    // this.autosFiltrados = carros
   },
   methods: {
     cambioRangos: function(event: Event){

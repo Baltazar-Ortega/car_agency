@@ -1,42 +1,119 @@
 <template>
     <v-container>
-        <h1 class="headline mt-2">Agregar Auto</h1>
+        <h1 class="headline mt-3 mb-5">Agregar Auto</h1>
         <v-row>
             <v-col xs="12" md="6">
-                <form id="formAgregar" @submit.prevent="agregar" enctype="multipart/form-data">
+                <form id="formAgregar" @submit.prevent="validarForm" enctype="multipart/form-data">
 
-                <v-text-field
-                    v-model="name"
-                    label="name"
-                    required
-                ></v-text-field>
-
-                 <v-text-field
-                    v-model="manufacturer"
-                    label="manufacturer"
-                    required
-                ></v-text-field>
-
-                <v-file-input
-                    label="pictureImg"
-                    filled
-                    prepend-icon="mdi-camera"
-                    @change="handlePicture($event)"
-                ></v-file-input>
-
-                <input type="hidden" name="picture" v-model="pictureUrl">
-
-                <v-btn color="success">
-                    <input type="submit" value="Enviar" />
-                </v-btn>
                 
+                    <v-text-field
+                        v-model="modelo"
+                        label="Modelo"
+                        name="modelo"
+                        @change="reiniciarMensaje"
+                    ></v-text-field>
 
+                    <v-text-field
+                        v-model="fabricante"
+                        label="Fabricante"
+                        name="fabricante"
+                    ></v-text-field>
+
+                    <v-file-input
+                        label="Imagen"
+                        filled
+                        prepend-icon="mdi-camera"
+                        class="mt-5 mb-5"
+                        @change="mostrarImagen($event)"
+                    ></v-file-input>
+
+                    <v-select v-model="color" :items="colors" label="Color" name="color"></v-select>
+
+                    <v-select v-model="tipo" :items="tipos" label="Tipo" name="tipo"></v-select>
+
+                    <v-select v-model="transmision" :items="transmisiones" label="Transmision" name="transmision"></v-select>
+
+                    <v-text-field
+                        v-model="propietarios"
+                        label="Propietarios"
+                        name="propietarios"
+                        type="number"
+                    ></v-text-field>
+
+                    <v-select v-model="usadoForm" :items="usados" label="Usado"></v-select>
+                    <input type="hidden" name="usado" v-model="usado">
+
+                    <v-select v-model="anio" :items="anios" label="Año" name="anio"></v-select>
+
+                    <v-text-field
+                        v-model="kilometraje"
+                        label="kilometraje"
+                        anio="kilometraje"
+                        type="number"
+                        name="kilometraje"
+                    ></v-text-field>
+
+                    <v-text-field
+                        v-model="precio"
+                        label="precio"
+                        name="precio"
+                        type="number"
+                    ></v-text-field>
+
+                    <v-text-field
+                        v-model="stock"
+                        label="stock"
+                        name="stock"
+                        type="number"
+                    ></v-text-field>
+
+                    
+
+                    <input type="hidden" name="imagen" v-model="pictureUrl">
+
+                    
+                    <v-btn type="submit" color="success" class="mt-4" >
+                    Enviar
+                    </v-btn>
+                
                 </form>
+
+                <v-card
+                    class="mt-3"
+                    color="success"
+                    dark
+                    max-width="400"
+                    v-if="agregado"
+                >
+                    <v-card-title>Operacion realizada con exito
+                    </v-card-title>
+
+                    <v-card-text class="headline font-weight-bold">
+                        Auto Agregado a la base de datos
+                    </v-card-text>
+
+                </v-card>
+
+                <v-card
+                    class="mt-3"
+                    color="red"
+                    dark
+                    max-width="400"
+                    v-if="invalido"
+                >
+                    <v-card-title>Error
+                    </v-card-title>
+
+                    <v-card-text class="headline font-weight-bold">
+                        Ingresa todos los campos
+                    </v-card-text>
+
+                </v-card>
 
             </v-col>
 
-            <v-col xs="12" md="3" offset="2">
-                <div id="uploadedImage"></div>
+            <v-col xs="12" md="4" offset="2">
+                <img id="uploadedImage" />
             </v-col>
         </v-row>
     </v-container>
@@ -50,74 +127,143 @@ const vm = Vue.extend({
   name: 'AgregarAuto',
   data: function() {
     return {
-        name: '',
-        manufacturer: '',
-        picture: '',
+        modelo: '',
+        fabricante: '',
+        color: 'Rojo',
+        colors: [
+            'Rojo',
+            'Negro',
+            'Gris',
+            'Blanco',
+            'Otro',
+        ],
+        tipo: 'Automovil',
+        tipos: [
+            'Automovil',
+            'Camioneta'
+        ],
+        transmision: 'Estandar',
+        transmisiones: [
+            'Estandar',
+            'Automatico'
+        ],
+        usado: 1,
+        usadoForm: 'Si',
+        usados: ['Si', 'No'],
+        anio: 2020,
+        anios: [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,
+                2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021],
+        propietarios: 0,
+        kilometraje: 10000,
+        precio: 0,
+        stock: 0,
+        pictureUrl: '',
+        // Config
         cloudName: 'balti',
         uploadPreset: 'schnauzer',
-        pictureUrl: '',
-        agregado: false,
+        urlApi: 'https://cryptic-brook-62567.herokuapp.com',
+        imageFile: File,
+        invalido: false,
+        agregado: false
     }
+  },
+  computed: {
+      usadoConvertir: function () {
+          if (this.usadoForm == 'Si') {
+              return 1
+          } else {
+              return 0
+          }
+      }
   },
   methods: {
       agregar: function() {
-          if (this.validarForm()){
-              console.log("Validado en agregar")
-                // const form: HTMLFormElement =  document.getElementById('formAgregar') as HTMLFormElement
-                // console.log("Form enviado", form)
-                // axios.post('http://localhost:3000/cars', new FormData(form)).then(res => console.log(res)).catch(err => console.log(err))
-                // this.agregado = true
-          } else {
-              return
-          }
-          
-      },
-      handlePicture: function(evt: any) {
+        const form: HTMLFormElement =  document.getElementById('formAgregar') as HTMLFormElement
+        console.log("Form enviado", form)
+        axios.post(`${this.urlApi}/automovils`, new FormData(form)).then(res => console.log(res)).catch(err => console.log(err))
 
-          const uploadedImage = document.getElementById('uploadedImage');
-
-          const file = evt
-          
-          const urlCloud = `https://api.cloudinary.com/v1_1/${this.cloudName}/image/upload`;
-          //console.log("UrlCloud", urlCloud)
-          const xhr = new XMLHttpRequest();
-          const fd = new FormData();
-          xhr.open('POST', urlCloud, true)
-          xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
-
-          xhr.onreadystatechange = (e) => {
-              if (xhr.readyState == 4 && xhr.status == 200) {
-                // File uploaded successfully
-                const response = JSON.parse(xhr.responseText);
-                // https://res.cloudinary.com/cloudName/image/upload/v1483481128/public_id.jpg
-                const url = response.secure_url;
-                console.log('URL obtenida', url)
-                this.pictureUrl = url
-                // Create a thumbnail of the uploaded image, with 150px width
-                const tokens = url.split('/');
-                tokens.splice(-2, 0, 'w_350,c_scale');
-                const img = new Image(); // HTML5 Constructor
-                img.src = tokens.join('/');
-                img.alt = response.public_id;
-                (uploadedImage as HTMLElement).appendChild(img);
-            } else {
-                //console.log("xhr: ", xhr)
-                //console.log("xhr status: ", xhr.status)
-            }
-          };  
-          
-          fd.append('upload_preset', this.uploadPreset)
-          fd.append('file', file)
-          xhr.send(fd)
+        const uploadedImage: any = document.getElementById('uploadedImage');
+        this.agregado = true  
+        this.modelo = ''
+        this.fabricante = ''
+        this.pictureUrl = ''
+        this.propietarios = 0
+        this.kilometraje = 10000
+        this.precio = 0
+        this.stock = 0
+        uploadedImage.src = ''
       },
       validarForm: function() {
-          if (this.pictureUrl && this.manufacturer && this.name != ''){
-              console.log('Campos llenos')
-              return true
-          }else{
-              console.log('campos incompletos')
-              return false
+          this.cloudinary().then(() => {
+              console.log('Picture Url: ', this.pictureUrl)
+                if (this.modelo != '' && this.fabricante != '' &&
+                        this.color != '' && this.tipo != '' &&
+                        this.transmision != '' && this.usado != null && 
+                        this.anio != null && this.propietarios != null &&
+                        this.kilometraje != null && this.precio != null && this.stock != null){
+                    this.usado = this.usadoConvertir
+                    console.log('Campos llenos')
+                    this.agregar()
+                }else{
+                    console.log('campos incompletos')
+                    this.invalido = true
+                }
+          })
+          
+      },
+      cloudinary: function() {
+
+          return new Promise((resolve) => {
+              const file: any = this.imageFile
+
+
+                const urlCloud = `https://api.cloudinary.com/v1_1/${this.cloudName}/image/upload`;
+                //console.log("UrlCloud", urlCloud)
+                const xhr = new XMLHttpRequest();
+                const fd = new FormData();
+                xhr.open('POST', urlCloud, true)
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+
+                xhr.onreadystatechange = (e) => {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // File uploaded successfully
+                        const response = JSON.parse(xhr.responseText);
+                        // https://res.cloudinary.com/cloudName/image/upload/v1483481128/public_id.jpg
+                        const url = response.secure_url;
+                        console.log('URL obtenida', url)
+                        this.pictureUrl = url
+                        resolve()
+                        } else {
+                            console.log("xhr: ", xhr)
+                            console.log("xhr status: ", xhr.status)
+                        }
+                    };  
+                    
+                    fd.append('upload_preset', this.uploadPreset)
+                    fd.append('file', file)
+                    xhr.send(fd)
+
+          })
+
+          
+      },
+      mostrarImagen: function(evt: any) {
+
+          const uploadedImage: any = document.getElementById('uploadedImage');
+          uploadedImage.title = "Imagen"
+
+          const file = evt
+          this.imageFile = file
+
+          const fr = new FileReader();
+          fr.onload = function (e: any) {
+            uploadedImage.src = e.target.result;
           }
+          fr.readAsDataURL(file);
+          
+      },
+      reiniciarMensaje: function() {
+          this.agregado = false
       }
       
   }
@@ -127,5 +273,7 @@ export default vm;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+#uploadedImage {
+    width: 100%;
+}
 </style>
