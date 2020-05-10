@@ -1,21 +1,92 @@
 <template>
     <v-container>
         <h1 class="display-1 mt-3 mb-5">Buscar Auto</h1>
+        <v-text-field
+            v-model="modeloABuscar"
+            label="Modelo"
+            name="modelo"
+            type="text"
+        ></v-text-field>
+        <v-btn color="success" class="mt-4" @click="buscarModelo">
+            Buscar
+        </v-btn>
+
+        <v-list subheader v-if="autoEncontrado">
+          <v-subheader>Autos encontrados</v-subheader>
+
+          <v-list-item
+            v-for="auto in autos"
+            :key="auto.id"
+          >
+            <v-list-item-avatar>
+              <v-img :src="auto.imagen"></v-img>
+            </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-title v-text="auto.modelo"></v-list-item-title>
+            </v-list-item-content>
+            <v-list-item-content>
+              <strong> Fabricante: </strong> {{ auto.fabricante }}
+            </v-list-item-content>
+            <v-list-item-content>
+              <strong> Año:</strong> {{ auto.anio }}
+            </v-list-item-content>
+            <v-list-item-content>
+              <strong> Kilometraje:</strong> {{ auto.kilometraje }}
+            </v-list-item-content>
+            <v-list-item-content>
+              <strong> Usado:</strong> {{ auto.usado }}
+            </v-list-item-content>
+            <v-list-item-content>
+              <strong> Transmision:</strong> {{ auto.transmision }}
+            </v-list-item-content>
+            <v-list-item-content color="red">
+              <strong> Precio:</strong> {{ auto.precio }}
+            </v-list-item-content>
+            <v-list-item-content color="red">
+              <router-link :to="{ name: 'EditarAuto', params: {id: auto.id} }" >
+                <v-btn class="ml-1 mr-1 mb-5" outlined color="orange">Editar</v-btn>
+              </router-link>
+            </v-list-item-content>
+            <v-list-item-content color="red">
+              <v-btn class="ml-1 mb-5" outlined color="red" @click="eliminarAuto(auto)">Eliminar</v-btn>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+
     </v-container>
 </template>
 
 <script lang="ts">
 // import axios from 'axios'
+import axios from 'axios'
 import Vue from 'vue';
 
 const vm = Vue.extend({
   name: 'BuscarAuto',
   data: function() {
     return {
+      modeloABuscar: '',
+      autos: {} as any,
+      autoEncontrado: false,
+      urlApi: 'https://cryptic-brook-62567.herokuapp.com'
     }
   },
   methods: {
-      
+      buscarModelo: function() {
+        console.log("modeloABuscar: ", this.modeloABuscar)
+        const url = `${this.urlApi}/modelo/${this.modeloABuscar}.json`
+        const autos = axios.get(url, {
+          headers: { 'Content-Type': 'application/json' }
+        }).then(res => {
+          this.autoEncontrado = true
+          this.autos = res.data
+          console.log(this.autos)
+        }).catch(error => console.log("error", error))
+      },
+      eliminarAuto: function(auto: any) {
+        console.log(auto)
+      }
   }
 });
 export default vm;

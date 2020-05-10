@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <h1 class="headline mt-3 mb-5">Agregar Auto</h1>
+        <h1 class="headline mt-3 mb-5">Editar Auto</h1>
         <v-row>
             <v-col xs="12" md="6">
                 <form id="formAgregar" @submit.prevent="validarForm" enctype="multipart/form-data">
@@ -124,9 +124,10 @@ import axios from 'axios'
 import Vue from 'vue';
 
 const vm = Vue.extend({
-  name: 'AgregarAuto',
+  name: 'EditarAuto',
   data: function() {
     return {
+        idRecibido: parseInt(this.$route.params.id),
         modelo: '',
         fabricante: '',
         color: 'Rojo',
@@ -167,6 +168,26 @@ const vm = Vue.extend({
         agregado: false
     }
   },
+  created: function() {
+      const autos = axios.get(`${this.urlApi}/automovils/${this.idRecibido}.json`, {
+      headers: { 'Content-Type': 'application/json' }
+    }).then(res => {
+      console.log("res: ", res)
+      const auto = res.data
+      this.modelo = auto.modelo
+      this.fabricante = auto.fabricante
+      this.color = auto.color
+      this.usado = auto.usado
+      this.tipo = auto.tipo
+      this.transmision = auto.transmision
+      this.propietarios = auto.propietarios
+      this.kilometraje = auto.kilometraje
+      this.precio = auto.precio
+      this.stock = auto.stock
+
+    }).catch(error => console.log("error", error))
+      console.log("id recibido: ", this.idRecibido)
+  },
   computed: {
       usadoConvertir: function () {
           if (this.usadoForm == 'Si') {
@@ -177,92 +198,91 @@ const vm = Vue.extend({
       }
   },
   methods: {
-      agregar: function() {
-        const form: HTMLFormElement =  document.getElementById('formAgregar') as HTMLFormElement
-        console.log("Form enviado", form)
-        axios.post(`${this.urlApi}/automovils`, new FormData(form)).then(res => console.log(res)).catch(err => console.log(err))
+    //   agregar: function() {
+    //     const form: HTMLFormElement =  document.getElementById('formAgregar') as HTMLFormElement
+    //     console.log("Form enviado", form)
+    //     axios.post(`${this.urlApi}/automovils`, new FormData(form)).then(res => console.log(res)).catch(err => console.log(err))
 
-        const uploadedImage: any = document.getElementById('uploadedImage');
-        this.agregado = true  
-        this.modelo = ''
-        this.fabricante = ''
-        this.pictureUrl = ''
-        this.propietarios = 0
-        this.kilometraje = 10000
-        this.precio = 0
-        this.stock = 0
-        this.usado = 1
-        uploadedImage.src = ''
-      },
-      validarForm: function() {
-          this.cloudinary().then(() => {
-              console.log('Picture Url: ', this.pictureUrl)
-                if (this.modelo != '' && this.fabricante != '' &&
-                        this.color != '' && this.tipo != '' &&
-                        this.transmision != '' && this.usado != null && 
-                        this.anio != null && this.propietarios != null &&
-                        this.kilometraje != null && this.precio != null && this.stock != null){
-                    this.usado = this.usadoConvertir
-                    console.log('Campos llenos')
-                    this.agregar()
-                }else{
-                    console.log('campos incompletos')
-                    this.invalido = true
-                }
-          })
+    //     const uploadedImage: any = document.getElementById('uploadedImage');
+    //     this.agregado = true  
+    //     this.modelo = ''
+    //     this.fabricante = ''
+    //     this.pictureUrl = ''
+    //     this.propietarios = 0
+    //     this.kilometraje = 10000
+    //     this.precio = 0
+    //     this.stock = 0
+    //     uploadedImage.src = ''
+    //   },
+    //   validarForm: function() {
+    //       this.cloudinary().then(() => {
+    //           console.log('Picture Url: ', this.pictureUrl)
+    //             if (this.modelo != '' && this.fabricante != '' &&
+    //                     this.color != '' && this.tipo != '' &&
+    //                     this.transmision != '' && this.usado != null && 
+    //                     this.anio != null && this.propietarios != null &&
+    //                     this.kilometraje != null && this.precio != null && this.stock != null){
+    //                 this.usado = this.usadoConvertir
+    //                 console.log('Campos llenos')
+    //                 this.agregar()
+    //             }else{
+    //                 console.log('campos incompletos')
+    //                 this.invalido = true
+    //             }
+    //       })
           
-      },
-      cloudinary: function() {
+    //   },
+    //   cloudinary: function() {
 
-          return new Promise((resolve) => {
-              const file: any = this.imageFile
+    //       return new Promise((resolve) => {
+    //           const file: any = this.imageFile
 
 
-                const urlCloud = `https://api.cloudinary.com/v1_1/${this.cloudName}/image/upload`;
-                //console.log("UrlCloud", urlCloud)
-                const xhr = new XMLHttpRequest();
-                const fd = new FormData();
-                xhr.open('POST', urlCloud, true)
-                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+    //             const urlCloud = `https://api.cloudinary.com/v1_1/${this.cloudName}/image/upload`;
+    //             //console.log("UrlCloud", urlCloud)
+    //             const xhr = new XMLHttpRequest();
+    //             const fd = new FormData();
+    //             xhr.open('POST', urlCloud, true)
+    //             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
 
-                xhr.onreadystatechange = (e) => {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        // File uploaded successfully
-                        const response = JSON.parse(xhr.responseText);
-                        // https://res.cloudinary.com/cloudName/image/upload/v1483481128/public_id.jpg
-                        const url = response.secure_url;
-                        console.log('URL obtenida', url)
-                        this.pictureUrl = url
-                        resolve()
-                        } else {
-                            console.log("xhr: ", xhr)
-                            console.log("xhr status: ", xhr.status)
-                        }
-                    };  
+    //             xhr.onreadystatechange = (e) => {
+    //                 if (xhr.readyState == 4 && xhr.status == 200) {
+    //                     // File uploaded successfully
+    //                     const response = JSON.parse(xhr.responseText);
+    //                     // https://res.cloudinary.com/cloudName/image/upload/v1483481128/public_id.jpg
+    //                     const url = response.secure_url;
+    //                     console.log('URL obtenida', url)
+    //                     this.pictureUrl = url
+    //                     resolve()
+    //                     } else {
+    //                         console.log("xhr: ", xhr)
+    //                         console.log("xhr status: ", xhr.status)
+    //                     }
+    //                 };  
                     
-                    fd.append('upload_preset', this.uploadPreset)
-                    fd.append('file', file)
-                    xhr.send(fd)
+    //                 fd.append('upload_preset', this.uploadPreset)
+    //                 fd.append('file', file)
+    //                 xhr.send(fd)
 
-          })
+    //       })
 
           
-      },
-      mostrarImagen: function(evt: any) {
+    //   },
+    //   mostrarImagen: function(evt: any) {
 
-          const uploadedImage: any = document.getElementById('uploadedImage');
-          uploadedImage.title = "Imagen"
+    //       const uploadedImage: any = document.getElementById('uploadedImage');
+    //       uploadedImage.title = "Imagen"
 
-          const file = evt
-          this.imageFile = file
+    //       const file = evt
+    //       this.imageFile = file
 
-          const fr = new FileReader();
-          fr.onload = function (e: any) {
-            uploadedImage.src = e.target.result;
-          }
-          fr.readAsDataURL(file);
+    //       const fr = new FileReader();
+    //       fr.onload = function (e: any) {
+    //         uploadedImage.src = e.target.result;
+    //       }
+    //       fr.readAsDataURL(file);
           
-      },
+    //   },
       reiniciarMensaje: function() {
           this.agregado = false
       }

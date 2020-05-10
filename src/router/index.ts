@@ -7,6 +7,7 @@ import AgregarAuto from '@/components/AgregarAuto.vue'
 import ConsultasStock from '@/components/ConsultasStock.vue'
 import ConsultasClientes from '@/components/ConsultasClientes.vue'
 import BuscarAuto from '@/components/BuscarAuto.vue'
+import EditarAuto from '@/components/EditarAuto.vue'
 
 Vue.use(VueRouter)
 
@@ -45,6 +46,11 @@ Vue.use(VueRouter)
     path: '/buscarAuto',
     name: 'BuscarAuto',
     component: BuscarAuto
+  },
+  {
+    path: '/editarAuto/:id',
+    name: 'EditarAuto',
+    component: EditarAuto
   }
 ]
 
