@@ -54,6 +54,22 @@
           </v-list-item>
         </v-list>
 
+        <v-card
+                    class="mt-3"
+                    color="success"
+                    dark
+                    max-width="400"
+                    v-if="eliminado"
+                >
+                    <v-card-title>Exito
+                    </v-card-title>
+
+                    <v-card-text class="headline font-weight-bold">
+                        Auto eliminado
+                    </v-card-text>
+
+                </v-card>
+
     </v-container>
 </template>
 
@@ -69,6 +85,7 @@ const vm = Vue.extend({
       modeloABuscar: '',
       autos: {} as any,
       autoEncontrado: false,
+      eliminado: false,
       urlApi: 'https://cryptic-brook-62567.herokuapp.com'
     }
   },
@@ -85,7 +102,16 @@ const vm = Vue.extend({
         }).catch(error => console.log("error", error))
       },
       eliminarAuto: function(auto: any) {
-        console.log(auto)
+        console.log(auto.id)
+        if (confirm("¿Esta seguro de eliminar el auto?")){
+          const url = `${this.urlApi}/automovils/${auto.id}.json`
+          axios.delete(url).then(res => {
+            console.log(res)
+            this.eliminado = true
+          }).catch(err => console.log(err))
+        }else{
+          return
+        }
       }
   }
 });
