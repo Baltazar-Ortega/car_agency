@@ -93,7 +93,7 @@ const vm = Vue.extend({
       buscarModelo: function() {
         console.log("modeloABuscar: ", this.modeloABuscar)
         const url = `${this.urlApi}/modelo/${this.modeloABuscar}.json`
-        const autos = axios.get(url, {
+        axios.get(url, {
           headers: { 'Content-Type': 'application/json' }
         }).then(res => {
           this.autoEncontrado = true
