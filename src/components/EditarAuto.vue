@@ -40,8 +40,11 @@
                         type="number"
                     ></v-text-field>
 
-                    <v-select v-model="usadoForm" :items="usados" label="Usado"></v-select>
-                    <input type="hidden" name="usado" v-model="usado">
+                    <label>¿Usado?</label>
+                    <select v-model="usado" label="Usado" name="usado" form="formAgregar">
+                        <option value="1">Si</option>
+                        <option value="0">No</option>
+                    </select>
 
                     <v-select v-model="anio" :items="anios" label="Año" name="anio"></v-select>
 
@@ -89,7 +92,7 @@
                     </v-card-title>
 
                     <v-card-text class="headline font-weight-bold">
-                        Auto Agregado a la base de datos
+                        Auto modificado
                     </v-card-text>
 
                 </v-card>
@@ -148,9 +151,7 @@ const vm = Vue.extend({
             'Estandar',
             'Automatico'
         ],
-        usado: 1,
-        usadoForm: 'Si',
-        usados: ['Si', 'No'],
+        usado: '1',
         anio: 2020,
         anios: [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,
                 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021],
@@ -172,6 +173,9 @@ const vm = Vue.extend({
       const autos = axios.get(`${this.urlApi}/automovils/${this.idRecibido}.json`, {
       headers: { 'Content-Type': 'application/json' }
     }).then(res => {
+    
+      const uploadedImage: any = document.getElementById('uploadedImage');
+
       console.log("res: ", res)
       const auto = res.data
       this.modelo = auto.modelo
@@ -184,105 +188,100 @@ const vm = Vue.extend({
       this.kilometraje = auto.kilometraje
       this.precio = auto.precio
       this.stock = auto.stock
+      this.pictureUrl = auto.imagen
+      uploadedImage.src = this.pictureUrl
 
     }).catch(error => console.log("error", error))
       console.log("id recibido: ", this.idRecibido)
   },
-  computed: {
-      usadoConvertir: function () {
-          if (this.usadoForm == 'Si') {
-              return 1
-          } else {
-              return 0
-          }
-      }
-  },
   methods: {
-    //   agregar: function() {
-    //     const form: HTMLFormElement =  document.getElementById('formAgregar') as HTMLFormElement
-    //     console.log("Form enviado", form)
-    //     axios.post(`${this.urlApi}/automovils`, new FormData(form)).then(res => console.log(res)).catch(err => console.log(err))
+      modificar: function() {
+        const form: HTMLFormElement =  document.getElementById('formAgregar') as HTMLFormElement
+        console.log("Form enviado", form)
+        axios.put(`${this.urlApi}/automovils/${this.idRecibido}`, new FormData(form)).then(res => console.log(res)).catch(err => console.log(err))
 
-    //     const uploadedImage: any = document.getElementById('uploadedImage');
-    //     this.agregado = true  
-    //     this.modelo = ''
-    //     this.fabricante = ''
-    //     this.pictureUrl = ''
-    //     this.propietarios = 0
-    //     this.kilometraje = 10000
-    //     this.precio = 0
-    //     this.stock = 0
-    //     uploadedImage.src = ''
-    //   },
-    //   validarForm: function() {
-    //       this.cloudinary().then(() => {
-    //           console.log('Picture Url: ', this.pictureUrl)
-    //             if (this.modelo != '' && this.fabricante != '' &&
-    //                     this.color != '' && this.tipo != '' &&
-    //                     this.transmision != '' && this.usado != null && 
-    //                     this.anio != null && this.propietarios != null &&
-    //                     this.kilometraje != null && this.precio != null && this.stock != null){
-    //                 this.usado = this.usadoConvertir
-    //                 console.log('Campos llenos')
-    //                 this.agregar()
-    //             }else{
-    //                 console.log('campos incompletos')
-    //                 this.invalido = true
-    //             }
-    //       })
-          
-    //   },
-    //   cloudinary: function() {
-
-    //       return new Promise((resolve) => {
-    //           const file: any = this.imageFile
-
-
-    //             const urlCloud = `https://api.cloudinary.com/v1_1/${this.cloudName}/image/upload`;
-    //             //console.log("UrlCloud", urlCloud)
-    //             const xhr = new XMLHttpRequest();
-    //             const fd = new FormData();
-    //             xhr.open('POST', urlCloud, true)
-    //             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
-
-    //             xhr.onreadystatechange = (e) => {
-    //                 if (xhr.readyState == 4 && xhr.status == 200) {
-    //                     // File uploaded successfully
-    //                     const response = JSON.parse(xhr.responseText);
-    //                     // https://res.cloudinary.com/cloudName/image/upload/v1483481128/public_id.jpg
-    //                     const url = response.secure_url;
-    //                     console.log('URL obtenida', url)
-    //                     this.pictureUrl = url
-    //                     resolve()
-    //                     } else {
-    //                         console.log("xhr: ", xhr)
-    //                         console.log("xhr status: ", xhr.status)
-    //                     }
-    //                 };  
+        const uploadedImage: any = document.getElementById('uploadedImage');
+        this.agregado = true  
+        this.modelo = ''
+        this.fabricante = ''
+        this.pictureUrl = ''
+        this.propietarios = 0
+        this.kilometraje = 10000
+        this.precio = 0
+        this.stock = 0
+        this.usado = "1"
+        uploadedImage.src = ''
+      },
+      validarForm: function() {
+          this.cloudinary().then(() => {
+              console.log('Picture Url: ', this.pictureUrl)
+                if (this.modelo != '' && this.fabricante != '' &&
+                        this.color != '' && this.tipo != '' &&
+                        this.transmision != '' && this.usado != null && 
+                        this.anio != null && this.propietarios != null &&
+                        this.kilometraje != null && this.precio != null && this.stock != null){
                     
-    //                 fd.append('upload_preset', this.uploadPreset)
-    //                 fd.append('file', file)
-    //                 xhr.send(fd)
+                    console.log("Usado: ", this.usado)
+                    console.log('Campos llenos')
+                    this.modificar()
+                }else{
+                    console.log('campos incompletos')
+                    this.invalido = true
+                }
+          })
+          
+      },
+      cloudinary: function() {
 
-    //       })
+          return new Promise((resolve) => {
+              const file: any = this.imageFile
+
+
+                const urlCloud = `https://api.cloudinary.com/v1_1/${this.cloudName}/image/upload`;
+                //console.log("UrlCloud", urlCloud)
+                const xhr = new XMLHttpRequest();
+                const fd = new FormData();
+                xhr.open('POST', urlCloud, true)
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+
+                xhr.onreadystatechange = (e) => {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // File uploaded successfully
+                        const response = JSON.parse(xhr.responseText);
+                        // https://res.cloudinary.com/cloudName/image/upload/v1483481128/public_id.jpg
+                        const url = response.secure_url;
+                        console.log('URL obtenida', url)
+                        this.pictureUrl = url
+                        resolve()
+                        } else {
+                            console.log("xhr: ", xhr)
+                            console.log("xhr status: ", xhr.status)
+                        }
+                    };  
+                    
+                    fd.append('upload_preset', this.uploadPreset)
+                    fd.append('file', file)
+                    xhr.send(fd)
+
+          })
 
           
-    //   },
-    //   mostrarImagen: function(evt: any) {
+      },
+      mostrarImagen: function(evt: any) {
 
-    //       const uploadedImage: any = document.getElementById('uploadedImage');
-    //       uploadedImage.title = "Imagen"
+          const uploadedImage: any = document.getElementById('uploadedImage');
+          uploadedImage.title = "Imagen"
 
-    //       const file = evt
-    //       this.imageFile = file
+          const file = evt
+          this.imageFile = file
 
-    //       const fr = new FileReader();
-    //       fr.onload = function (e: any) {
-    //         uploadedImage.src = e.target.result;
-    //       }
-    //       fr.readAsDataURL(file);
+          const fr = new FileReader();
+          fr.onload = function (e: any) {
+            uploadedImage.src = e.target.result;
+          }
+          fr.readAsDataURL(file);
           
-    //   },
+      },
       reiniciarMensaje: function() {
           this.agregado = false
       }

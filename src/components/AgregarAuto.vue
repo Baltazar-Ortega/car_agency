@@ -40,8 +40,11 @@
                         type="number"
                     ></v-text-field>
 
-                    <v-select v-model="usadoForm" :items="usados" label="Usado"></v-select>
-                    <input type="hidden" name="usado" v-model="usado">
+                    <label>¿Usado?</label>
+                    <select v-model="usado" label="Usado" name="usado" form="formAgregar">
+                        <option value="1">Si</option>
+                        <option value="0">No</option>
+                    </select>
 
                     <v-select v-model="anio" :items="anios" label="Año" name="anio"></v-select>
 
@@ -89,7 +92,7 @@
                     </v-card-title>
 
                     <v-card-text class="headline font-weight-bold">
-                        Auto Agregado a la base de datos
+                        Auto agregado a la base de datos
                     </v-card-text>
 
                 </v-card>
@@ -147,9 +150,7 @@ const vm = Vue.extend({
             'Estandar',
             'Automatico'
         ],
-        usado: 1,
-        usadoForm: 'Si',
-        usados: ['Si', 'No'],
+        usado: "1",
         anio: 2020,
         anios: [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,
                 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021],
@@ -167,18 +168,12 @@ const vm = Vue.extend({
         agregado: false
     }
   },
-  computed: {
-      usadoConvertir: function () {
-          if (this.usadoForm == 'Si') {
-              return 1
-          } else {
-              return 0
-          }
-      }
+  created: function ()  {
+      console.log("this.usado: ", this.usado)
   },
   methods: {
       agregar: function() {
-        const form: HTMLFormElement =  document.getElementById('formAgregar') as HTMLFormElement
+        const form: any =  document.getElementById('formAgregar') as any
         console.log("Form enviado", form)
         axios.post(`${this.urlApi}/automovils`, new FormData(form)).then(res => console.log(res)).catch(err => console.log(err))
 
@@ -191,7 +186,7 @@ const vm = Vue.extend({
         this.kilometraje = 10000
         this.precio = 0
         this.stock = 0
-        this.usado = 1
+        this.usado = "1"
         uploadedImage.src = ''
       },
       validarForm: function() {
@@ -202,7 +197,8 @@ const vm = Vue.extend({
                         this.transmision != '' && this.usado != null && 
                         this.anio != null && this.propietarios != null &&
                         this.kilometraje != null && this.precio != null && this.stock != null){
-                    this.usado = this.usadoConvertir
+                    // this.usado = this.usadoConvertir
+                    console.log('Valor de usado: ', this.usado)
                     console.log('Campos llenos')
                     this.agregar()
                 }else{
@@ -265,7 +261,7 @@ const vm = Vue.extend({
       },
       reiniciarMensaje: function() {
           this.agregado = false
-      }
+      },
       
   }
 });
