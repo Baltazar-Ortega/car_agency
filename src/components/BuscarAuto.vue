@@ -11,7 +11,23 @@
             Buscar
         </v-btn>
 
-        <v-list subheader v-if="autoEncontrado">
+        <v-card
+                    class="mt-3"
+                    color="red"
+                    dark
+                    max-width="400"
+                    v-if="noEncontrado"
+                >
+                    <v-card-title>Error
+                    </v-card-title>
+
+                    <v-card-text class="headline font-weight-bold">
+                        No hay un auto con esas caracteristicas
+                    </v-card-text>
+
+                </v-card>
+
+        <v-list subheader v-if="autoEncontrado && !eliminado">
           <v-subheader>Autos encontrados</v-subheader>
 
           <v-list-item
@@ -35,7 +51,7 @@
               <strong> Kilometraje:</strong> {{ auto.kilometraje }}
             </v-list-item-content>
             <v-list-item-content>
-              <strong> Usado:</strong> {{ auto.usado }}
+              <strong> Usado:</strong> {{ stringUsado(auto.usado) }}
             </v-list-item-content>
             <v-list-item-content>
               <strong> Transmision:</strong> {{ auto.transmision }}
@@ -85,6 +101,7 @@ const vm = Vue.extend({
       modeloABuscar: '',
       autos: {} as any,
       autoEncontrado: false,
+      noEncontrado: false,
       eliminado: false,
       urlApi: 'https://cryptic-brook-62567.herokuapp.com'
     }
@@ -96,8 +113,15 @@ const vm = Vue.extend({
         axios.get(url, {
           headers: { 'Content-Type': 'application/json' }
         }).then(res => {
-          this.autoEncontrado = true
+          
           this.autos = res.data
+          if (this.autos.length >= 1) {
+            this.autoEncontrado = true
+            this.noEncontrado = false
+          } else {
+            this.noEncontrado = true
+          }
+          
           console.log(this.autos)
         }).catch(error => console.log("error", error))
       },
@@ -108,9 +132,21 @@ const vm = Vue.extend({
           axios.delete(url).then(res => {
             console.log(res)
             this.eliminado = true
+
+            setTimeout(() => {
+              this.$router.push('/')
+            }, 2000)
+
           }).catch(err => console.log(err))
         }else{
           return
+        }
+      },
+      stringUsado(numero: number) {
+        if (numero == 1) {
+          return 'Si'
+        } else {
+          return 'No'
         }
       }
   }

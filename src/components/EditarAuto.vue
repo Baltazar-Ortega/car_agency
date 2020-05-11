@@ -166,7 +166,8 @@ const vm = Vue.extend({
         urlApi: 'https://cryptic-brook-62567.herokuapp.com',
         imageFile: File,
         invalido: false,
-        agregado: false
+        agregado: false,
+        originalPicture: ''
     }
   },
   created: function() {
@@ -175,6 +176,7 @@ const vm = Vue.extend({
     }).then(res => {
     
       const uploadedImage: any = document.getElementById('uploadedImage');
+      
 
       console.log("res: ", res)
       const auto = res.data
@@ -188,8 +190,9 @@ const vm = Vue.extend({
       this.kilometraje = auto.kilometraje
       this.precio = auto.precio
       this.stock = auto.stock
-      this.pictureUrl = auto.imagen
-      uploadedImage.src = this.pictureUrl
+      this.originalPicture = auto.imagen
+      uploadedImage.src = auto.imagen
+      
 
     }).catch(error => console.log("error", error))
       console.log("id recibido: ", this.idRecibido)
@@ -213,22 +216,39 @@ const vm = Vue.extend({
         uploadedImage.src = ''
       },
       validarForm: function() {
-          this.cloudinary().then(() => {
-              console.log('Picture Url: ', this.pictureUrl)
-                if (this.modelo != '' && this.fabricante != '' &&
-                        this.color != '' && this.tipo != '' &&
-                        this.transmision != '' && this.usado != null && 
-                        this.anio != null && this.propietarios != null &&
-                        this.kilometraje != null && this.precio != null && this.stock != null){
-                    
-                    console.log("Usado: ", this.usado)
-                    console.log('Campos llenos')
-                    this.modificar()
-                }else{
-                    console.log('campos incompletos')
-                    this.invalido = true
-                }
-          })
+          if (this.pictureUrl != '') {
+              this.cloudinary().then(() => {
+                    console.log('Picture Url: ', this.pictureUrl)
+                        if (this.modelo != '' && this.fabricante != '' &&
+                                this.color != '' && this.tipo != '' &&
+                                this.transmision != '' && this.usado != null && 
+                                this.anio != null && this.propietarios != null &&
+                                this.kilometraje != null && this.precio != null && this.stock != null){
+                            
+                            console.log("Usado: ", this.usado)
+                            console.log('Campos llenos')
+                            this.modificar()
+                        }else{
+                            console.log('campos incompletos')
+                            this.invalido = true
+                        }
+                    })
+          } else {
+              if (this.modelo != '' && this.fabricante != '' &&
+                                this.color != '' && this.tipo != '' &&
+                                this.transmision != '' && this.usado != null && 
+                                this.anio != null && this.propietarios != null &&
+                                this.kilometraje != null && this.precio != null && this.stock != null){
+                            this.pictureUrl = this.originalPicture
+                            console.log("Usado: ", this.usado)
+                            console.log('Campos llenos')
+                            this.modificar()
+                        }else{
+                            console.log('campos incompletos')
+                            this.invalido = true
+                        }
+          }
+          
           
       },
       cloudinary: function() {

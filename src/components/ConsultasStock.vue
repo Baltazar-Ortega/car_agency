@@ -55,7 +55,7 @@
               <strong> Kilometraje:</strong> {{ auto.kilometraje }}
             </v-list-item-content>
             <v-list-item-content>
-              <strong> Usado:</strong> {{ auto.usado }}
+              <strong> Usado:</strong> {{ stringUsado(auto.usado) }}
             </v-list-item-content>
             <v-list-item-content>
               <strong> Transmision:</strong> {{ auto.transmision }}
@@ -172,6 +172,13 @@ const vm = Vue.extend({
           }).catch(err => console.log(err))
         }else{
           return
+        }
+      },
+      stringUsado(numero: number) {
+        if (numero == 1) {
+          return 'Si'
+        } else {
+          return 'No'
         }
       }
   }

@@ -39,6 +39,9 @@
                   <p><strong> </strong>  </p>
                   <p><strong> Propietarios: </strong> {{auto.propietarios}}</p>
               </v-card-text>
+
+              <FormCliente :auto="auto" :id="this.$route.params.id" />
+
           </v-card>     
          </v-col>
     </v-row>
@@ -49,6 +52,7 @@
 /* eslint-disable */
 import axios from 'axios'
 import Vue from 'vue';
+import FormCliente from '@/components/FormCliente.vue';
 
 export default Vue.extend({
   name: 'Detalle',
@@ -60,11 +64,12 @@ export default Vue.extend({
   data: function() {
     return {
         auto: {} as any,
-        idRecibido: parseInt(this.$route.params.id)
+        idRecibido: parseInt(this.$route.params.id),
+        urlApi: 'https://cryptic-brook-62567.herokuapp.com'
     }
   },
   created: function() {
-    const autos = axios.get(`https://cryptic-brook-62567.herokuapp.com/automovils/${this.idRecibido}.json`, {
+    axios.get(`${this.urlApi}/automovils/${this.idRecibido}.json`, {
       headers: { 'Content-Type': 'application/json' }
     }).then(res => {
       console.log("res: ", res)
@@ -80,6 +85,9 @@ export default Vue.extend({
         return 'Nuevo'
       }
     }
+  },
+  components: {
+    FormCliente
   }
 });
 </script>

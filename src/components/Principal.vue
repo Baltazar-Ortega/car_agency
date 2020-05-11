@@ -187,8 +187,8 @@ export default Vue.extend({
       autosFiltrados: new Array<any>(),
       slider: 40,
       minPrecio: 50000,
-      maxPrecio: 300000,
-      rangoPrecio: [50000, 300000], // range que puso el usuario
+      maxPrecio: 400000,
+      rangoPrecio: [50000, 400000], // range que puso el usuario
       minAnio: 2000,
       maxAnio: 2021,
       rangoAnio: [2000, 2021],
