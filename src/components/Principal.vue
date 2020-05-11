@@ -136,9 +136,9 @@
 
         <v-select v-model="transmision" :items="transmisiones" label="Transmision" name="transmision" @change="seleccionarTransmision" class="mt-3"></v-select>
 
-        <v-select v-model="modeloSeleccionado" :items="modelos" label="Modelos" name="modelo" @change="seleccionarModelo"></v-select>
+        <v-select v-model="modelo" :items="modelos" label="Modelo" name="modelo" @change="seleccionarModelo" class="mt-3"></v-select>
 
-        <v-select v-model="fabricanteSeleccionado" :items="fabricantes" label="Fabricantes" name="fabricante" @change="seleccionarFabricante"></v-select>
+        <v-select v-model="fabricante" :items="fabricantes" label="Fabricante" name="fabricante" @change="seleccionarFabricante" class="mt-3"></v-select>
 
       </v-col>
 
@@ -215,30 +215,49 @@ export default Vue.extend({
             'Estandar',
             'Automatico'
       ],
-      // config
-      apiUrl: 'https://cryptic-brook-62567.herokuapp.com',
-      //Filtro de Modelos y fabricantes
-      modelos: [] as any,
+      modelo: '' as String,
+      modelos: [
+            'CR-V',
+            'Beat',
+            'Spark',
+            'Civic',
+
+      ],
+      fabricante: '' as String,
+      fabricantes: [
+            'Seat',
+            'Chevrolet',
+            'Jeep',
+            'Audi',
+
+      ],
+       onModelo: false,
+      //modelos: [] as any,
       modeloSeleccionado: '',
       cantidadModelo: 0,
-      fabricantes: [] as any,
+      onFabricante: false,
+      //fabricantes: [] as any,
       fabricanteSeleccionado: '',
       cantidadFabricante: 0,
+      // config
+      apiUrl: 'https://cryptic-brook-62567.herokuapp.com',
+
       autosObtenidos: false,
-      autosX: [] as any,
     }
   },
   created: function() {
     const autos = axios.get(`${this.apiUrl}/automovils.json`, {
       headers: { 'Content-Type': 'application/json' }
     }).then(res => {
-      this.autosX = res.data
+      this.autos = res.data
       this.autosFiltrados = res.data
     }).catch(error => console.log("error", error))
 
-    //Metodo para filtro de modelos
-        if (this.autosX.length !== 0) {
-          this.autosX = []
+
+    this.onModelo = true
+        this.onFabricante = false
+        if (this.autos.length !== 0) {
+          this.autos = []
           this.autosObtenidos = false
         }
         const url1 = `${this.apiUrl}/modeloSinRepetir.json`
@@ -249,11 +268,13 @@ export default Vue.extend({
           const respuesta: any[] = res.data
           const modelos = respuesta.map(item => item.modelo)
           this.modelos = modelos
+          
         }).catch(err => console.log(err))
 
-    //Metodo para filtro de fabricantes
-        if (this.autosX.length !== 0) {
-          this.autosX = []
+        this.onFabricante = true
+        this.onModelo = false
+        if (this.autos.length !== 0) {
+          this.autos = []
           this.autosObtenidos = false
         }
         const url2 = `${this.apiUrl}/fabricanteSinRepetir.json`
@@ -266,6 +287,8 @@ export default Vue.extend({
           this.fabricantes = fabricantes
           
         }).catch(err => console.log(err))
+
+
   },
   methods: {
     cambioRangos: function(){
