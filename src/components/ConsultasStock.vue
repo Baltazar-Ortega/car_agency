@@ -91,10 +91,6 @@ const vm = Vue.extend({
       modelos: [] as any,
       modeloSeleccionado: '',
       cantidadModelo: 0,
-<<<<<<< HEAD
-
-=======
->>>>>>> e0086600d90798298a990c661d6e9041c08bb0e4
       onFabricante: false,
       fabricantes: [] as any,
       fabricanteSeleccionado: '',

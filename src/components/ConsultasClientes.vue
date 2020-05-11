@@ -72,15 +72,15 @@
                 :key="cliente.id"
               >
 
-              <v-list-item-content>
-                <strong> Nombre: </strong> {{ cliente.nombre }}
-              </v-list-item-content>
-              <v-list-item-content class="correo">
-                <strong> Correo: </strong> {{ cliente.correo }}
-              </v-list-item-content>
-              <v-list-item-content>
-                <strong> Auto:</strong> {{ masRecientesAutos[index].modelo }}
-              </v-list-item-content>
+                <v-list-item-content>
+                  <strong> Nombre: </strong> {{ cliente.nombre }}
+                </v-list-item-content>
+                <v-list-item-content class="correo">
+                  <strong> Correo: </strong> {{ cliente.correo }}
+                </v-list-item-content>
+                <v-list-item-content>
+                  <strong> Auto:</strong> {{ masRecientesAutos[index] }}
+                </v-list-item-content>
               
               </v-list-item>
             
@@ -126,7 +126,7 @@ const vm = Vue.extend({
           this.masRecientes.forEach((cliente: any) => {
             axios.get(`${this.urlApi}/automovils/${cliente.idAutomovil}.json`, {
               headers: { 'Content-Type': 'application/json' }
-            }).then(res => masRecientesAutos.push(res.data)  ).catch(err => console.log(err)) 
+            }).then(res => masRecientesAutos.push(res.data.modelo)  ).catch(err => console.log(err)) 
             
           })
           this.masRecientesAutos = masRecientesAutos

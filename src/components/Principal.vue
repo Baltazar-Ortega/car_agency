@@ -231,11 +231,9 @@ export default Vue.extend({
             'Audi',
 
       ],
-       onModelo: false,
       //modelos: [] as any,
       modeloSeleccionado: '',
       cantidadModelo: 0,
-      onFabricante: false,
       //fabricantes: [] as any,
       fabricanteSeleccionado: '',
       cantidadFabricante: 0,
@@ -254,8 +252,7 @@ export default Vue.extend({
     }).catch(error => console.log("error", error))
 
 
-    this.onModelo = true
-        this.onFabricante = false
+    
         if (this.autos.length !== 0) {
           this.autos = []
           this.autosObtenidos = false
@@ -271,8 +268,7 @@ export default Vue.extend({
           
         }).catch(err => console.log(err))
 
-        this.onFabricante = true
-        this.onModelo = false
+        
         if (this.autos.length !== 0) {
           this.autos = []
           this.autosObtenidos = false
