@@ -83,7 +83,6 @@
 <script lang="ts">
 import axios from 'axios'
 import Vue from 'vue';
-
 const vm = Vue.extend({
   name: 'ConsultasStock',
   data: function() {
@@ -92,7 +91,10 @@ const vm = Vue.extend({
       modelos: [] as any,
       modeloSeleccionado: '',
       cantidadModelo: 0,
+<<<<<<< HEAD
 
+=======
+>>>>>>> e0086600d90798298a990c661d6e9041c08bb0e4
       onFabricante: false,
       fabricantes: [] as any,
       fabricanteSeleccionado: '',
@@ -188,5 +190,4 @@ export default vm;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 </style>

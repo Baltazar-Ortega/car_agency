@@ -14,11 +14,6 @@
             Auto más popular
           </v-btn>
         </v-col>
-        <v-col>
-          <v-btn class="ma-2 mb-5" outlined color="indigo">
-            Por fabricante
-          </v-btn>
-        </v-col>
 
       </v-row>
 

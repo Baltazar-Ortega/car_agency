@@ -10,6 +10,15 @@
         <v-btn color="success" class="mt-4" @click="buscarModelo">
             Buscar
         </v-btn>
+        <v-text-field
+            v-model="modeloBBuscar"
+            label="Fabricante"
+            name="fabricante"
+            type="text"
+        ></v-text-field>
+        <v-btn color="success" class="mt-4" @click="buscarFabricante">
+            Buscar
+        </v-btn>
 
         <v-card
                     class="mt-3"
@@ -99,6 +108,7 @@ const vm = Vue.extend({
   data: function() {
     return {
       modeloABuscar: '',
+      modeloBBuscar: '',
       autos: {} as any,
       autoEncontrado: false,
       noEncontrado: false,
@@ -122,6 +132,17 @@ const vm = Vue.extend({
             this.noEncontrado = true
           }
           
+          console.log(this.autos)
+        }).catch(error => console.log("error", error))
+      },
+      buscarFabricante: function() {
+        console.log("modeloBBuscar: ", this.modeloBBuscar)
+        const url = `${this.urlApi}/fabricante/${this.modeloBBuscar}.json`
+        const autos = axios.get(url, {
+          headers: { 'Content-Type': 'application/json' }
+        }).then(res => {
+          this.autoEncontrado = true
+          this.autos = res.data
           console.log(this.autos)
         }).catch(error => console.log("error", error))
       },

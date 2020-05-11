@@ -136,6 +136,10 @@
 
         <v-select v-model="transmision" :items="transmisiones" label="Transmision" name="transmision" @change="seleccionarTransmision" class="mt-3"></v-select>
 
+        <v-select v-model="modelo" :items="modelos" label="Modelo" name="modelo" @change="seleccionarModelo" class="mt-3"></v-select>
+
+        <v-select v-model="fabricante" :items="fabricantes" label="Fabricante" name="fabricante" @change="seleccionarFabricante" class="mt-3"></v-select>
+
       </v-col>
 
 
@@ -211,8 +215,34 @@ export default Vue.extend({
             'Estandar',
             'Automatico'
       ],
+      modelo: '' as String,
+      modelos: [
+            'CR-V',
+            'Beat',
+            'Spark',
+            'Civic',
+
+      ],
+      fabricante: '' as String,
+      fabricantes: [
+            'Seat',
+            'Chevrolet',
+            'Jeep',
+            'Audi',
+
+      ],
+       onModelo: false,
+      //modelos: [] as any,
+      modeloSeleccionado: '',
+      cantidadModelo: 0,
+      onFabricante: false,
+      //fabricantes: [] as any,
+      fabricanteSeleccionado: '',
+      cantidadFabricante: 0,
       // config
-      apiUrl: 'https://cryptic-brook-62567.herokuapp.com'
+      apiUrl: 'https://cryptic-brook-62567.herokuapp.com',
+
+      autosObtenidos: false,
     }
   },
   created: function() {
@@ -222,6 +252,43 @@ export default Vue.extend({
       this.autos = res.data
       this.autosFiltrados = res.data
     }).catch(error => console.log("error", error))
+
+
+    this.onModelo = true
+        this.onFabricante = false
+        if (this.autos.length !== 0) {
+          this.autos = []
+          this.autosObtenidos = false
+        }
+        const url1 = `${this.apiUrl}/modeloSinRepetir.json`
+        axios.get(url1, {
+          headers: { 'Content-Type': 'application/json' }
+        }).then(res => {
+          console.log("Respuesta de modelos sin repetir: ", res.data)
+          const respuesta: any[] = res.data
+          const modelos = respuesta.map(item => item.modelo)
+          this.modelos = modelos
+          
+        }).catch(err => console.log(err))
+
+        this.onFabricante = true
+        this.onModelo = false
+        if (this.autos.length !== 0) {
+          this.autos = []
+          this.autosObtenidos = false
+        }
+        const url2 = `${this.apiUrl}/fabricanteSinRepetir.json`
+        axios.get(url2, {
+          headers: { 'Content-Type': 'application/json' }
+        }).then(res => {
+          console.log("Respuesta de fabricantes sin repetir: ", res.data)
+          const respuesta: any[] = res.data
+          const fabricantes = respuesta.map(item => item.fabricante)
+          this.fabricantes = fabricantes
+          
+        }).catch(err => console.log(err))
+
+
   },
   methods: {
     cambioRangos: function(){
@@ -289,6 +356,56 @@ export default Vue.extend({
     },
     seleccionarTransmision: function(transmision: String) {
       const autos = axios.get(`${this.apiUrl}/transmision/${transmision}.json`, {
+          headers: { 'Content-Type': 'application/json' }
+        }).then(res => {
+
+          const autosRes: any[] = res.data 
+          // Deben cumplir con el usado/nuevo
+          let autos;
+
+          if(this.usadoString){
+            autos = autosRes.filter(auto => auto.usado == this.usado)
+            if (this.color) {
+              autos = autos.filter(auto => auto.color == this.color)
+            }
+          } else {
+            autos = autosRes
+          }
+          
+
+          this.autos = autos
+          this.autosFiltrados = autos
+          // console.log("res", res.data)
+          this.cambioRangos()
+        }).catch(error => console.log("error", error))
+    },
+    seleccionarModelo: function(modelo: String) {
+      const autos = axios.get(`${this.apiUrl}/modelo/${modelo}.json`, {
+          headers: { 'Content-Type': 'application/json' }
+        }).then(res => {
+
+          const autosRes: any[] = res.data 
+          // Deben cumplir con el usado/nuevo
+          let autos;
+
+          if(this.usadoString){
+            autos = autosRes.filter(auto => auto.usado == this.usado)
+            if (this.color) {
+              autos = autos.filter(auto => auto.color == this.color)
+            }
+          } else {
+            autos = autosRes
+          }
+          
+
+          this.autos = autos
+          this.autosFiltrados = autos
+          // console.log("res", res.data)
+          this.cambioRangos()
+        }).catch(error => console.log("error", error))
+    },
+    seleccionarFabricante: function(fabricante: String) {
+      const autos = axios.get(`${this.apiUrl}/fabricante/${fabricante}.json`, {
           headers: { 'Content-Type': 'application/json' }
         }).then(res => {
 
