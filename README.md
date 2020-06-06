@@ -18,5 +18,12 @@ npm run serve
 ```
 npm run build
 ```
+## Screenshots
 
+![imagen](https://user-images.githubusercontent.com/30305964/83943063-a9a4dc00-a7be-11ea-8f9e-98bd6bcc3ff9.png)
+
+
+![imagen](https://user-images.githubusercontent.com/30305964/83943080-ba555200-a7be-11ea-8812-c09790a5b12e.png)
+
+![imagen](https://user-images.githubusercontent.com/30305964/83943091-c9d49b00-a7be-11ea-96df-c3dff4263dd2.png)
 
